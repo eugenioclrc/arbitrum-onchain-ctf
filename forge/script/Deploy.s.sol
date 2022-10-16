@@ -11,7 +11,7 @@ contract ContractScript is Script {
     function setUp() public {}
 
     function run() public {
-        address MINTER = 0x18e3d8745a9b0C065309986acFE1d837bb7537cD;
+        address MINTER = 0x09AB10F1305aA4bf84055843e2C2fdb23445F99e;
         vm.startBroadcast();
         address c0 = address(new FactoryChallenge0());
         address f = address(new ChallengeFactory());
