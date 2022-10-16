@@ -1,5 +1,6 @@
 import { get } from "svelte/store";
 import { Contract } from "@ethersproject/contracts";
+import { PUBLIC_NFT } from '$env/static/public';
 
 import { chainId, signer } from "./eth";
 //import abiFactory from "./abi.json";
@@ -7,12 +8,9 @@ import { chainId, signer } from "./eth";
 const contractsDict = {};
 
 const abiFactory = [
-    "function mint(address _player, address _challenge, string memory ipfs, bytes calldata _signature) external"
+    "function mint(address _player, address _challenge, string memory ipfs, bytes calldata _signature) external",
+    "function balanceOf(address, uint256) external view returns(uint256)"
 ]
-
-const CONTRACTS_ADDRESS = {
-  31337: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0',
-};
 
 export default async function getContract() {
   const $signer = await get(signer);
@@ -23,10 +21,10 @@ export default async function getContract() {
     return contract.connect($signer);
   }
 
-  if (!CONTRACTS_ADDRESS[$chainId]) {
+  if (!PUBLIC_NFT) {
     throw new Error(`No contracts address for ${$chainId}`);
   }
 
-  contractsDict[$chainId] = new Contract(CONTRACTS_ADDRESS[$chainId], abiFactory, $signer);
+  contractsDict[$chainId] = new Contract(PUBLIC_NFT, abiFactory, $signer);
   return contractsDict[$chainId];  
 }

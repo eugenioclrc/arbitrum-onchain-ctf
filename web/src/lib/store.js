@@ -54,17 +54,3 @@ function createChallenges() {
 }
 
 export const Challenges = createChallenges();
-
-/* derived(wallet, async ($address) => {
-  console.log($address);
-  return 222;
-})
-
-/*
-
-export async function loadChallengesData() {
-  solved = await $contracts.factory.getChallengesNumber(wallet);
-}
-
-instances = await $contracts.factory.getChallengesInstances($wallet, 0);
-solved = await $contracts.factory.checkChallenge($wallet, 0);*/

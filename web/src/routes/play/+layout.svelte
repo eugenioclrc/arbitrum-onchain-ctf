@@ -4,6 +4,7 @@
     // import { dev } from '$app/environment';
     
     import Header from './Header.svelte';
+  import { PUBLIC_CHAINID } from '$env/static/public';
   
     onMount(
       async () => {
@@ -36,7 +37,8 @@
           </div>
       </div>
     </div>
-  {:else if $chainId != /*421613*/ 31337}
+    <!--  /* chaiin 421613 31337*/  -->
+  {:else if $chainId != PUBLIC_CHAINID}
     <div class="hero min-h-screen bg-base-200">
       <div class="hero-content flex-col lg:flex-row-reverse">
           <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">

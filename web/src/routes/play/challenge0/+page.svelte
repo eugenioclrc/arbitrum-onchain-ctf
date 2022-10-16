@@ -1,11 +1,13 @@
 <script>
+    import { PUBLIC_SAMPLECHALLENGE } from "$env/static/public";
+
     import { signer, wallet } from "$lib/eth";
     import * as ethers from "ethers";
 
     import ChallengeElement from '../Challenge.svelte';
   
     const nChallenge = 0;
-    const addressChallenge = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    const addressChallenge = PUBLIC_SAMPLECHALLENGE;
     
     const baseurl = 'https://github.com/eugenioclrc/DeFi-Security-Summit-Stanford/tree/master/challenges_sources/'
     const instancesDescriptions = [
@@ -14,7 +16,6 @@
 
     $: if($wallet) {
         window.solve = async (vtoken) => {
-
             const abi = [
                 "function approve(address _player, address _challenge, uint256 _signature) external",
                 "function transferFrom(address, address, uint256) external",

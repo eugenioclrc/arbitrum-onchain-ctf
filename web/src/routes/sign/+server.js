@@ -2,6 +2,10 @@
 import { error, json } from '@sveltejs/kit';
 import * as ethers from 'ethers';
 
+import { env } from '$env/dynamic/private';
+import { PUBLIC_MAINFACTORY, PUBLIC_NFT } from '$env/static/public';
+
+
 const abiFactory = [
   "function deployChallenge(address) external",
   "function getChallengesInstances(address,address) external view returns(address[] memory)",
@@ -12,18 +16,14 @@ const challengeFactoryAbi = [
   "function url() external view returns (string memory)"
 ]
 
-const factoryAddress = "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512";
-// demo unsecure pk
-// minter: 0x18e3d8745a9b0C065309986acFE1d837bb7537cD
-// Private key: 9308343e9a8d724ab4c5d6dd66d694eabae4ddb68752dd02f18006cb2b427cca
-const PK = "9308343e9a8d724ab4c5d6dd66d694eabae4ddb68752dd02f18006cb2b427cca"
-// nft is 0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
-const contractAddress = "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"
-
+const factoryAddress =  PUBLIC_MAINFACTORY;
+// nft is 
+const contractAddress = PUBLIC_NFT;
 
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
+  console.log(env);
   const challenge = url.searchParams.get('challenge');
   const player = url.searchParams.get('player');
  
@@ -32,8 +32,8 @@ export async function GET({ url }) {
   }
  
   // todo check player has end challenge
-  const provider = new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545');
-  const signer = new ethers.Wallet(PK, provider);
+  const provider = new ethers.providers.JsonRpcProvider(env.DEPLOYMENT_RPC);
+  const signer = new ethers.Wallet(env.DEPLOYMENT_MINTERPK, provider);
 
   const factory = new ethers.Contract(factoryAddress, abiFactory, signer);
   const solved = await factory.checkChallenge(player, challenge);

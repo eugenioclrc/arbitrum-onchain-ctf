@@ -9,6 +9,7 @@
     
     export let size = "";
     export let nChallenge;
+    let hasBeenMinted = false;
     export let addressChallenge = "";
     export let nameChallenge = '';
     export let instancesDescriptions = [{href: '', text: ''}];
@@ -39,6 +40,8 @@
         if(instances && instances.length) {
             solved = await contract.checkChallenge($wallet, addressChallenge);
         }
+        const nft = await getNft();
+    hasBeenMinted = Number(await nft.balanceOf($wallet, addressChallenge));
       } catch(err) {
         console.log({err})
       }
@@ -81,7 +84,7 @@
       }
       if (solved) {
         confetti();
-        if (solved && !showModal) {
+        if (solved && !showModal && !hasBeenMinted) {
           showModal = true;
           setTimeout(() => {
             modal = true;
@@ -120,7 +123,8 @@
               <div class="form-control mt-6 w-1/2 mx-auto">
                 {#if instances && instances.length}
                   {#if solved}
-                    <button on:click={mint} class="btn text-white no-underline text-xl btn-secondary mt-2" >Mint</button>
+
+                  <button on:click={mint} disabled=hasBeenMinted} class="btn text-white no-underline text-xl btn-secondary mt-2" >Mint</button>
                   {/if}
                   <button on:click={() => check()} class:shake={notSolved} class="btn" class:btn-secondary={!solved} class:btn-link={solved}>Check</button>
                   <button on:click={() => deploy()} class:loading={deploying} class="btn btn-warning mt-2">Reset</button>
@@ -146,7 +150,7 @@
         <h3 class="font-bold text-lg">Congratulations for breaking this challenge!</h3>
         <p class="py-4">You are awesome! Why don`t you brag this achievement with your by minting an NFT?</p>
         <div class="modal-action">
-          <a on:click={() => modal = false} href={twitterLink} class="btn text-white no-underline text-xl btn-secondary mt-2" target="_blank">Mint</a>
+            <button disabled={hasBeenMinted} on:click={() => { modal = false; mint(); }} class="btn text-white no-underline text-xl btn-secondary mt-2">Mint</button>
         </div>
       </div>
     </div>
