@@ -5,7 +5,7 @@ import {ECDSA} from "openzeppelin-contracts/utils/cryptography/ECDSA.sol";
 import {Owned} from "solmate/auth/Owned.sol";
 import {SoulBound1155} from "./SoulBound1155.sol";
 
-contract ProofOfHack is SoulBound1155, Owned {
+contract ProofOfHacker is SoulBound1155, Owned {
     address public minter;
 
     mapping(uint256 => string) private _uri;
@@ -28,9 +28,12 @@ contract ProofOfHack is SoulBound1155, Owned {
             revert CantMintMoreThanOnce();
         }
 
-        bytes32 hash = keccak256(abi.encodePacked(address(this), _challenge, msg.sender, _ipfs));
+        bytes32 hash = keccak256(abi.encodePacked(address(this), _challenge, _player, _ipfs));
+        bytes32 message = ECDSA.toEthSignedMessageHash(hash);
 
-        (address recovered, ECDSA.RecoverError error) = ECDSA.tryRecover(hash, _signature);
+        (address recovered, ECDSA.RecoverError error) = ECDSA.tryRecover(message, _signature);
+        require(recovered == minter, "!minter");
+
         if (error != ECDSA.RecoverError.NoError || recovered != minter) {
             revert WrongSignature();
         }

@@ -7,14 +7,11 @@ import { chainId, signer } from "./eth";
 const contractsDict = {};
 
 const abiFactory = [
-    "function deployChallenge(address) external",
-    "function getChallengesInstances(address,address) external view returns(address[] memory)",
-    "function checkChallenge(address user, address _challengeFactory) public view returns(bool)"
+    "function mint(address _player, address _challenge, string memory ipfs, bytes calldata _signature) external"
 ]
 
 const CONTRACTS_ADDRESS = {
-  5: '0xd93296489cf51135b36bc0a7c1114c310a676bfd',
-  31337: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+  31337: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0',
 };
 
 export default async function getContract() {

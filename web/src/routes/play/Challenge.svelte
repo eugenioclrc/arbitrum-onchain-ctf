@@ -2,6 +2,7 @@
 
     import { wallet } from '$lib/eth.js';
     import getContract from '$lib/contract.js';
+    import getNft from '$lib/nft.js';
     import confetti from 'canvas-confetti';
     
     import {Challenges} from '$lib/store.js';
@@ -15,21 +16,29 @@
     let deploying = false;
     let modal = false;
     
-    $: solved = $Challenges[nChallenge].solved;
-    let notSolved;
+    let solved = false;
+    let notSolved = false;
     let instances = [];
     
     const twitterLink = "https://twitter.com/intent/tweet?text="+encodeURIComponent("I have just solve Challenge '"+nameChallenge+"' on https://ctf-maker-monorepo.vercel.app/play/challenge"+nChallenge+" #DEFISecuritySummitStanford #ctf #blockchain #defi")
     
+    async function mint() {
+        const _data = await (await fetch(`/sign?player=${$wallet}&challenge=${addressChallenge}`)).json()
+        console.log(_data);
+        const nft = await getNft();
+        await nft.mint(
+            $wallet, addressChallenge, _data.nftUrl, _data.signature
+        );
+    }
+
     async function loadData() {
 
       try {
       const contract = await getContract();
-      window.c = contract;
-      console.log ({
-        w:$wallet, addressChallenge
-      })
         instances = await contract.getChallengesInstances($wallet, addressChallenge);
+        if(instances && instances.length) {
+            solved = await contract.checkChallenge($wallet, addressChallenge);
+        }
       } catch(err) {
         console.log({err})
       }
@@ -37,6 +46,7 @@
     
     $: if($wallet && typeof nChallenge != 'undefined') {
       loadData();
+      window.m = mint;
     }
     
     async function deploy() {
@@ -58,7 +68,9 @@
     async function check() {
       if (!solved) {
         notSolved = false;
-        await Challenges.check(addressChallenge);
+        const contract = await getContract();
+        solved = await contract.checkChallenge($wallet, addressChallenge);
+
         notSolved = !solved;
         // if (solved && !showModal) {
         //   showModal = true;
@@ -108,7 +120,7 @@
               <div class="form-control mt-6 w-1/2 mx-auto">
                 {#if instances && instances.length}
                   {#if solved}
-                    <a href={twitterLink} class="btn text-white no-underline text-xl btn-secondary mt-2" target="_blank">Share on twitter</a>
+                    <button on:click={mint} class="btn text-white no-underline text-xl btn-secondary mt-2" >Mint</button>
                   {/if}
                   <button on:click={() => check()} class:shake={notSolved} class="btn" class:btn-secondary={!solved} class:btn-link={solved}>Check</button>
                   <button on:click={() => deploy()} class:loading={deploying} class="btn btn-warning mt-2">Reset</button>
@@ -122,8 +134,7 @@
             </div>
           </div>
           <slot name="right" />
-        </div>
-        
+        </div> 
       </div>
     </div>
     
@@ -133,9 +144,9 @@
       <div class="modal-box">
         <label on:click={() => modal = false} for="my-modal-3" class="btn btn-ghost btn-sm btn-circle absolute right-2 top-2">✕</label>
         <h3 class="font-bold text-lg">Congratulations for breaking this challenge!</h3>
-        <p class="py-4">You are awesome! Why don`t you brag this achievement with your frens on twitter?</p>
+        <p class="py-4">You are awesome! Why don`t you brag this achievement with your by minting an NFT?</p>
         <div class="modal-action">
-          <a on:click={() => modal = false} href={twitterLink} class="btn text-white no-underline text-xl btn-secondary mt-2" target="_blank">Share on twitter</a>
+          <a on:click={() => modal = false} href={twitterLink} class="btn text-white no-underline text-xl btn-secondary mt-2" target="_blank">Mint</a>
         </div>
       </div>
     </div>

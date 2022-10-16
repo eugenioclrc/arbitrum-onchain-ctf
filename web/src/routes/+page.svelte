@@ -29,10 +29,9 @@
         <div class="card-body">
           <h2 class="card-title">Description</h2>
           <p>
-            This Workshop consists in a series of challenges, of increasing difficulty, targetting 
-            different <b>concepts</b> and common <b>vulnerabilities</b> found in <b>DeFi</b>. The CTF 
-            is designed in different flavors for all kinds of users. 
-            <a href="https://github.com/eugenioclrc/DeFi-Security-Summit-Stanford" target="_blank" class="link-secondary">Check out the repo</a>.
+            Onchain Capture The Flag Protocol is a competition that allows you to deploy CTF 
+            challenges in a permisionless way.
+            Once completing the challenge the player is rewarded with a “Proof of Hack” NFT  
           </p>
         </div>
       </div>
@@ -51,10 +50,11 @@
       </div>
       <div class="card w-96 bg-base-100 shadow-xl m-2">
         <div class="card-body">
-          <h2 class="card-title">Especial thanks</h2>
+          <h2 class="card-title">How to build your own CTF challenge?</h2>
           <p>
-            Built by <a class="link-primary" target="_blank" href="https://github.com/eugenioclrc">eugenioclrc</a> and <a class="link-primary" target="_blank" href="https://github.com/luksgrin">luksgrin</a><br>
-            special thanks to <a class="link-primary" target="_blank" href="https://github.com/patrickd-">patrickd</a>, <a class="link-primary" target="_blank" href="https://github.com/StErMi">StErMi</a>, <a class="link-primary" target="_blank" href="https://github.com/tinchoabbate">tinchoabbate</a> and <a href="https://twitter.com/0xrajeev" class="link-primary" target="_blank" rel="nofollow">Rajeev</a> for reviewing, commenting and helping during the elaboration and design of this CTF Workshop
+            You just need to deploy a challenge factory, the challenge factory should respect 
+            the onchain CTF protocol interface. This factory is responsable for deploying your challenge.
+            Please see our <a class="link-primary" href="https://github.com/eugenioclrc/arbitrum-onchain-ctf/blob/main/forge/src/testnet/challenges/Challenge0.factory.sol" target="_blank">Challenge Demo contract</a>.
           </p>
         </div>
       </div>
